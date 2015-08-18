@@ -20,6 +20,8 @@ wrist_roll = rospy.Publisher('/wrist_roll_position_controller/command', std_msgs
 
 gripper_position = rospy.Publisher('/gripper_position_controller/command', std_msgs.msg.Float64, queue_size=10)
 
+sliderHeight = 300
+
 class Example(QtGui.QWidget):
     
     def __init__(self):
@@ -29,85 +31,97 @@ class Example(QtGui.QWidget):
         
     def initUI(self):      
 
+        shoulderLabel = QtGui.QLabel(self)
+        shoulderLabel.setText("Shoulder")
+        shoulderLabel.setGeometry(90, 5, 100, 30)
+
         shoulderRollSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         shoulderRollSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        shoulderRollSlider.setGeometry(30, 40, 30, 200)
+        shoulderRollSlider.setGeometry(30, 40, 30, sliderHeight)
         shoulderRollSlider.valueChanged[int].connect(self.changeShoulderRoll)
 	shoulderRollSlider.setSliderPosition(50)
         
         shoulderRollLabel = QtGui.QLabel(self)
-        shoulderRollLabel.setText("Shoulder Roll")
+        shoulderRollLabel.setText("Roll")
         shoulderRollLabel.setGeometry(30, 20, 100, 30)
 
 	shoulderPitchSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         shoulderPitchSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        shoulderPitchSlider.setGeometry(140, 40, 30, 200)
+        shoulderPitchSlider.setGeometry(100, 40, 30, sliderHeight)
         shoulderPitchSlider.valueChanged[int].connect(self.changeShoulderPitch)
 	shoulderPitchSlider.setSliderPosition(50)
 
 	shoulderPitchLabel = QtGui.QLabel(self)
-	shoulderPitchLabel.setText("Shoulder Pitch")
-        shoulderPitchLabel.setGeometry(140, 20, 100, 30)
+	shoulderPitchLabel.setText("Pitch")
+        shoulderPitchLabel.setGeometry(100, 20, 100, 30)
         
         shoulderYawSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         shoulderYawSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        shoulderYawSlider.setGeometry(180, 40, 30, 200)
+        shoulderYawSlider.setGeometry(170, 40, 30, sliderHeight)
         shoulderYawSlider.valueChanged[int].connect(self.changeShoulderYaw)
 	shoulderYawSlider.setSliderPosition(50)
         
         shoulderYawLabel = QtGui.QLabel(self)
-        shoulderYawLabel.setText("Shoulder Yaw")
-        shoulderYawLabel.setGeometry(180, 20, 100, 30)
+        shoulderYawLabel.setText("Yaw")
+        shoulderYawLabel.setGeometry(170, 20, 100, 30)
 
         elbowPitchSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         elbowPitchSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        elbowPitchSlider.setGeometry(250, 40, 30, 200)
+        elbowPitchSlider.setGeometry(240, 40, 30, sliderHeight)
         elbowPitchSlider.valueChanged[int].connect(self.changeElbowPitch)
 	elbowPitchSlider.setSliderPosition(50)
         
+        elbowLabel = QtGui.QLabel(self)
+        elbowLabel.setText("Elbow")
+        elbowLabel.setGeometry(270, 5, 100, 30)
+
         elbowPitchLabel = QtGui.QLabel(self)
-        elbowPitchLabel.setText("Elbow Pitch")
-        elbowPitchLabel.setGeometry(250, 20, 100, 30)
+        elbowPitchLabel.setText("Pitch")
+        elbowPitchLabel.setGeometry(240, 20, 100, 30)
 
         elbowYawSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         elbowYawSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        elbowYawSlider.setGeometry(360, 40, 30, 200)
+        elbowYawSlider.setGeometry(310, 40, 30, sliderHeight)
         elbowYawSlider.valueChanged[int].connect(self.changeElbowYaw)
 	elbowYawSlider.setSliderPosition(50)
         
         elbowYawLabel = QtGui.QLabel(self)
-        elbowYawLabel.setText("Elbow Yaw")
-        elbowYawLabel.setGeometry(360, 20, 100, 30)
+        elbowYawLabel.setText("Yaw")
+        elbowYawLabel.setGeometry(310, 20, 100, 30)
 
         wristPitchSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         wristPitchSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        wristPitchSlider.setGeometry(450, 40, 30, 200)
+        wristPitchSlider.setGeometry(380, 40, 30, sliderHeight)
         wristPitchSlider.valueChanged[int].connect(self.changeWristPitch)
 	wristPitchSlider.setSliderPosition(50)
         
+        wristLabel = QtGui.QLabel(self)
+        wristLabel.setText("Wrist")
+        wristLabel.setGeometry(420, 5, 100, 30)
+
         wristPitchLabel = QtGui.QLabel(self)
-        wristPitchLabel.setText("Wrist Pitch")
-        wristPitchLabel.setGeometry(450, 20, 100, 30)
+        wristPitchLabel.setText("Pitch")
+        wristPitchLabel.setGeometry(380, 20, 100, 30)
 
         wristRollSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         wristRollSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        wristRollSlider.setGeometry(550, 40, 30, 200)
+        wristRollSlider.setGeometry(450, 40, 30, sliderHeight)
         wristRollSlider.valueChanged[int].connect(self.changeWristRoll)
 	wristRollSlider.setSliderPosition(50)
         
         wristRollLabel = QtGui.QLabel(self)
-        wristRollLabel.setText("Wrist Roll")
-        wristRollLabel.setGeometry(550, 20, 100, 30)
+        wristRollLabel.setText("Roll")
+        wristRollLabel.setGeometry(450, 20, 100, 30)
 
         gripPosSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         gripPosSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        gripPosSlider.setGeometry(650, 40, 30, 200)
+        gripPosSlider.setGeometry(520, 40, 30, sliderHeight)
         gripPosSlider.valueChanged[int].connect(self.changeGripPos)
 	gripPosSlider.setSliderPosition(50)
         
         gripPosLabel = QtGui.QLabel(self)
         gripPosLabel.setText("Grip Pos")
-        gripPosLabel.setGeometry(650, 20, 100, 30)
+        gripPosLabel.setGeometry(520, 20, 100, 30)
 
         self.setGeometry(300, 300, 740, 480)
         self.setWindowTitle('Cyton Gamma 300 Control')
