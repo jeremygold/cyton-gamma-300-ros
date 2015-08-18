@@ -18,6 +18,8 @@ elbow_pitch = rospy.Publisher('/elbow_pitch_position_controller/command', std_ms
 wrist_pitch = rospy.Publisher('/wrist_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
 wrist_roll = rospy.Publisher('/wrist_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
 
+gripper_position = rospy.Publisher('/gripper_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+
 class Example(QtGui.QWidget):
     
     def __init__(self):
@@ -97,7 +99,17 @@ class Example(QtGui.QWidget):
         wristRollLabel.setText("Wrist Roll")
         wristRollLabel.setGeometry(550, 20, 100, 30)
 
-        self.setGeometry(300, 300, 640, 480)
+        gripPosSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
+        gripPosSlider.setFocusPolicy(QtCore.Qt.NoFocus)
+        gripPosSlider.setGeometry(650, 40, 30, 200)
+        gripPosSlider.valueChanged[int].connect(self.changeGripPos)
+	gripPosSlider.setSliderPosition(50)
+        
+        gripPosLabel = QtGui.QLabel(self)
+        gripPosLabel.setText("Grip Pos")
+        gripPosLabel.setGeometry(650, 20, 100, 30)
+
+        self.setGeometry(300, 300, 740, 480)
         self.setWindowTitle('Cyton Gamma 300 Control')
         self.show()
         
@@ -156,6 +168,14 @@ class Example(QtGui.QWidget):
 	pos = (float(value) / 100.0) * wristRollDelta + wristRollMin
 	print 'Wrist roll {0}'.format(pos)
 	wrist_roll.publish(pos)
+
+    def changeGripPos(self, value):
+	gripPosMin = -20.0
+	gripPosMax = -10.0
+	gripPosDelta = gripPosMax - gripPosMin
+	pos = (float(value) / 100.0) * gripPosDelta + gripPosMin
+	print 'Grip pos {0}'.format(pos)
+	gripper_position.publish(pos)
 
 def main():
     app = QtGui.QApplication(sys.argv)
