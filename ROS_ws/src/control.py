@@ -114,44 +114,44 @@ class Example(QtGui.QWidget):
         self.show()
         
     def changeShoulderRoll(self, value):
-	shoulderRollMin = -1.0
-	shoulderRollMax = 1.0
+	shoulderRollMin = -3.8
+	shoulderRollMax = 1.5
 	shoulderRollDelta = shoulderRollMax - shoulderRollMin
 	pos = (float(value) / 100.0) * shoulderRollDelta + shoulderRollMin
 	print 'Shoulder roll {0}'.format(pos)
 	shoulder_roll.publish(pos)
         
     def changeShoulderPitch(self, value):
-	shoulderPitchMin = -2.0
-	shoulderPitchMax = 0.0
+	shoulderPitchMin = -3.0
+	shoulderPitchMax = 0.6
 	shoulderPitchDelta = shoulderPitchMax - shoulderPitchMin
 	pos = (float(value) / 100.0) * shoulderPitchDelta + shoulderPitchMin
 	print 'Shoulder pitch {0}'.format(pos)
 	shoulder_pitch.publish(pos)
 
     def changeShoulderYaw(self, value):
-	shoulderYawMin = -1.0
-	shoulderYawMax = 1.0
+	shoulderYawMin = -3.0
+	shoulderYawMax = 1.5
 	shoulderYawDelta = shoulderYawMax - shoulderYawMin
 	pos = (float(value) / 100.0) * shoulderYawDelta + shoulderYawMin
 	print 'Shoulder yaw {0}'.format(pos)
 	shoulder_yaw.publish(pos)
 
-    def changeElbowYaw(self, value):
-	elbowYawMin = -2.0
-	elbowYawMax = 0.0
-	elbowYawDelta = elbowYawMax - elbowYawMin
-	pos = (float(value) / 100.0) * elbowYawDelta + elbowYawMin
-	print 'Elbow yaw {0}'.format(pos)
-	elbow_yaw.publish(pos)
-
     def changeElbowPitch(self, value):
-	elbowPitchMin = -2.0
-	elbowPitchMax = 0.0
+	elbowPitchMin = -3.0
+	elbowPitchMax = 0.6
 	elbowPitchDelta = elbowPitchMax - elbowPitchMin
 	pos = (float(value) / 100.0) * elbowPitchDelta + elbowPitchMin
 	print 'Elbow pitch {0}'.format(pos)
 	elbow_pitch.publish(pos)
+
+    def changeElbowYaw(self, value):
+	elbowYawMin = -3.0
+	elbowYawMax = 0.6
+	elbowYawDelta = elbowYawMax - elbowYawMin
+	pos = (float(value) / 100.0) * elbowYawDelta + elbowYawMin
+	print 'Elbow yaw {0}'.format(pos)
+	elbow_yaw.publish(pos)
 
     def changeWristPitch(self, value):
 	wristPitchMin = -3.0
