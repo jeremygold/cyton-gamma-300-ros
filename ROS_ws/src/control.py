@@ -87,6 +87,16 @@ class Example(QtGui.QWidget):
         wristPitchLabel.setText("Wrist Pitch")
         wristPitchLabel.setGeometry(450, 20, 100, 30)
 
+        wristRollSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
+        wristRollSlider.setFocusPolicy(QtCore.Qt.NoFocus)
+        wristRollSlider.setGeometry(550, 40, 30, 200)
+        wristRollSlider.valueChanged[int].connect(self.changeWristRoll)
+	wristRollSlider.setSliderPosition(50)
+        
+        wristRollLabel = QtGui.QLabel(self)
+        wristRollLabel.setText("Wrist Roll")
+        wristRollLabel.setGeometry(550, 20, 100, 30)
+
         self.setGeometry(300, 300, 640, 480)
         self.setWindowTitle('Cyton Gamma 300 Control')
         self.show()
@@ -138,6 +148,14 @@ class Example(QtGui.QWidget):
 	pos = (float(value) / 100.0) * wristPitchDelta + wristPitchMin
 	print 'Wrist pitch {0}'.format(pos)
 	wrist_pitch.publish(pos)
+
+    def changeWristRoll(self, value):
+	wristRollMin = -3.0
+	wristRollMax = 1.5
+	wristRollDelta = wristRollMax - wristRollMin
+	pos = (float(value) / 100.0) * wristRollDelta + wristRollMin
+	print 'Wrist roll {0}'.format(pos)
+	wrist_roll.publish(pos)
 
 def main():
     app = QtGui.QApplication(sys.argv)
