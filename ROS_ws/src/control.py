@@ -5,20 +5,7 @@ from PyQt4 import QtGui, QtCore
 import rospy
 import std_msgs
 import time
-
-rospy.init_node('cyton_controller_manager', anonymous=True)
-
-shoulder_roll = rospy.Publisher('/shoulder_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-shoulder_yaw = rospy.Publisher('/shoulder_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-shoulder_pitch = rospy.Publisher('/shoulder_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-
-elbow_yaw = rospy.Publisher('/elbow_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-elbow_pitch = rospy.Publisher('/elbow_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-
-wrist_pitch = rospy.Publisher('/wrist_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-wrist_roll = rospy.Publisher('/wrist_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-
-gripper_position = rospy.Publisher('/gripper_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+from dynamixel_msgs.msg import JointState
 
 sliderHeight = 300
 
@@ -26,9 +13,56 @@ class Example(QtGui.QWidget):
     
     def __init__(self):
         super(Example, self).__init__()
-        
+
+        self.initRospy()
         self.initUI()
+
+    def initRospy(self):
+        rospy.init_node('cyton_controller_manager', anonymous=True)
+
+        self.shoulder_roll = rospy.Publisher('/shoulder_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+        self.shoulder_yaw = rospy.Publisher('/shoulder_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+        self.shoulder_pitch = rospy.Publisher('/shoulder_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+
+        self.elbow_yaw = rospy.Publisher('/elbow_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+        self.elbow_pitch = rospy.Publisher('/elbow_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+
+        self.wrist_pitch = rospy.Publisher('/wrist_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+        self.wrist_roll = rospy.Publisher('/wrist_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+
+        self.gripper_position = rospy.Publisher('/gripper_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+
+        rospy.Subscriber('/shoulder_roll_position_controller/state', JointState, self.onShoulderRoll)
+        rospy.Subscriber('/shoulder_yaw_position_controller/state', JointState, self.onShoulderYaw)
+        rospy.Subscriber('/shoulder_pitch_position_controller/state', JointState, self.onShoulderPitch)
+
+        rospy.Subscriber('/elbow_yaw_position_controller/state', JointState, self.onElbowYaw)
+        rospy.Subscriber('/elbow_pitch_position_controller/state', JointState, self.onElbowPitch)
+
+        rospy.Subscriber('/wrist_pitch_position_controller/state', JointState, self.onWristPitch)
+        rospy.Subscriber('/wrist_roll_position_controller/state', JointState, self.onWristRoll)
+
+    def onShoulderRoll(self, data):
+        self.shoulderRollPos = float(data.current_pos)
         
+    def onShoulderYaw(self, data):
+        self.shoulderYawPos = float(data.current_pos)
+
+    def onShoulderPitch(self, data):
+        self.shoulderPitchPos = float(data.current_pos)
+
+    def onElbowYaw(self, data):
+        self.elbowYawPos = float(data.current_pos)
+
+    def onElbowPitch(self, data):
+        self.elbowPitchPos = float(data.current_pos)
+
+    def onWristPitch(self, data):
+        self.wristPitchPos = float(data.current_pos)
+
+    def onWristRoll(self, data):
+        self.wristRollPos = float(data.current_pos)
+
     def initUI(self):      
 
         shoulderLabel = QtGui.QLabel(self)
@@ -123,6 +157,16 @@ class Example(QtGui.QWidget):
         gripPosLabel.setText("Grip Pos")
         gripPosLabel.setGeometry(520, 20, 100, 30)
 
+        savePosButton = QtGui.QPushButton(self)
+        savePosButton.setText("Save pos")
+        savePosButton.setGeometry(380, sliderHeight + 40, 100, 30)
+        savePosButton.clicked.connect(self.savePos)
+
+        loadPosButton = QtGui.QPushButton(self)
+        loadPosButton.setText("Load pos")
+        loadPosButton.setGeometry(500, sliderHeight + 40, 100, 30)
+        loadPosButton.clicked.connect(self.loadPos)
+
         self.setGeometry(300, 300, 740, 480)
         self.setWindowTitle('Cyton Gamma 300 Control')
         self.show()
@@ -133,7 +177,7 @@ class Example(QtGui.QWidget):
 	shoulderRollDelta = shoulderRollMax - shoulderRollMin
 	pos = (float(value) / 100.0) * shoulderRollDelta + shoulderRollMin
 	print 'Shoulder roll {0}'.format(pos)
-	shoulder_roll.publish(pos)
+	self.shoulder_roll.publish(pos)
         
     def changeShoulderPitch(self, value):
 	shoulderPitchMin = -3.0
@@ -141,7 +185,7 @@ class Example(QtGui.QWidget):
 	shoulderPitchDelta = shoulderPitchMax - shoulderPitchMin
 	pos = (float(value) / 100.0) * shoulderPitchDelta + shoulderPitchMin
 	print 'Shoulder pitch {0}'.format(pos)
-	shoulder_pitch.publish(pos)
+	self.shoulder_pitch.publish(pos)
 
     def changeShoulderYaw(self, value):
 	shoulderYawMin = -3.0
@@ -149,7 +193,7 @@ class Example(QtGui.QWidget):
 	shoulderYawDelta = shoulderYawMax - shoulderYawMin
 	pos = (float(value) / 100.0) * shoulderYawDelta + shoulderYawMin
 	print 'Shoulder yaw {0}'.format(pos)
-	shoulder_yaw.publish(pos)
+	self.shoulder_yaw.publish(pos)
 
     def changeElbowPitch(self, value):
 	elbowPitchMin = -3.0
@@ -157,7 +201,7 @@ class Example(QtGui.QWidget):
 	elbowPitchDelta = elbowPitchMax - elbowPitchMin
 	pos = (float(value) / 100.0) * elbowPitchDelta + elbowPitchMin
 	print 'Elbow pitch {0}'.format(pos)
-	elbow_pitch.publish(pos)
+	self.elbow_pitch.publish(pos)
 
     def changeElbowYaw(self, value):
 	elbowYawMin = -3.0
@@ -165,7 +209,7 @@ class Example(QtGui.QWidget):
 	elbowYawDelta = elbowYawMax - elbowYawMin
 	pos = (float(value) / 100.0) * elbowYawDelta + elbowYawMin
 	print 'Elbow yaw {0}'.format(pos)
-	elbow_yaw.publish(pos)
+	self.elbow_yaw.publish(pos)
 
     def changeWristPitch(self, value):
 	wristPitchMin = -3.0
@@ -173,7 +217,7 @@ class Example(QtGui.QWidget):
 	wristPitchDelta = wristPitchMax - wristPitchMin
 	pos = (float(value) / 100.0) * wristPitchDelta + wristPitchMin
 	print 'Wrist pitch {0}'.format(pos)
-	wrist_pitch.publish(pos)
+	self.wrist_pitch.publish(pos)
 
     def changeWristRoll(self, value):
 	wristRollMin = -3.0
@@ -181,7 +225,7 @@ class Example(QtGui.QWidget):
 	wristRollDelta = wristRollMax - wristRollMin
 	pos = (float(value) / 100.0) * wristRollDelta + wristRollMin
 	print 'Wrist roll {0}'.format(pos)
-	wrist_roll.publish(pos)
+	self.wrist_roll.publish(pos)
 
     def changeGripPos(self, value):
 	gripPosMin = -20.0
@@ -189,13 +233,40 @@ class Example(QtGui.QWidget):
 	gripPosDelta = gripPosMax - gripPosMin
 	pos = (float(value) / 100.0) * gripPosDelta + gripPosMin
 	print 'Grip pos {0}'.format(pos)
-	gripper_position.publish(pos)
+	self.gripper_position.publish(pos)
+
+    def savePos(self):
+        text_file = open("SavePos.csv", "w")
+        text_file.write("{0},{1},{2},{3},{4},{5},{6}".format(
+            self.shoulderRollPos, \
+            self.shoulderYawPos, \
+            self.shoulderPitchPos, \
+            self.elbowYawPos, \
+            self.elbowPitchPos, \
+            self.wristPitchPos, \
+            self.wristRollPos))
+        text_file.close()
+        print "Saved..."
+
+    def loadPos(self):
+        text_file = open("SavePos.csv", "r")
+        line = text_file.read()
+        text_file.close()
+
+        print "Loading position: {0}".format(line)
+        positions = line.split(',')
+        self.shoulder_roll.publish(float(positions[0]))
+        self.shoulder_yaw.publish(float(positions[1]))
+        self.shoulder_pitch.publish(float(positions[2]))
+        self.elbow_yaw.publish(float(positions[3]))
+        self.elbow_pitch.publish(float(positions[4]))
+        self.wrist_pitch.publish(float(positions[5]))
+        self.wrist_roll.publish(float(positions[6]))
 
 def main():
     app = QtGui.QApplication(sys.argv)
     ex = Example()
     sys.exit(app.exec_())
-
 
 if __name__ == '__main__':
     main()
