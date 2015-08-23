@@ -236,8 +236,8 @@ class Example(QtGui.QWidget):
 	self.gripper_position.publish(pos)
 
     def savePos(self):
-        text_file = open("SavePos.csv", "w")
-        text_file.write("{0},{1},{2},{3},{4},{5},{6}".format(
+        text_file = open("SavePos.csv", "a")
+        text_file.write("{0},{1},{2},{3},{4},{5},{6}\n".format(
             self.shoulderRollPos, \
             self.shoulderYawPos, \
             self.shoulderPitchPos, \
@@ -250,18 +250,21 @@ class Example(QtGui.QWidget):
 
     def loadPos(self):
         text_file = open("SavePos.csv", "r")
-        line = text_file.read()
+        lines = text_file.readlines()
         text_file.close()
 
-        print "Loading position: {0}".format(line)
-        positions = line.split(',')
-        self.shoulder_roll.publish(float(positions[0]))
-        self.shoulder_yaw.publish(float(positions[1]))
-        self.shoulder_pitch.publish(float(positions[2]))
-        self.elbow_yaw.publish(float(positions[3]))
-        self.elbow_pitch.publish(float(positions[4]))
-        self.wrist_pitch.publish(float(positions[5]))
-        self.wrist_roll.publish(float(positions[6]))
+        for line in lines:
+            print "Loading position: {0}".format(line)
+            positions = line.split(',')
+            self.shoulder_roll.publish(float(positions[0]))
+            self.shoulder_yaw.publish(float(positions[1]))
+            self.shoulder_pitch.publish(float(positions[2]))
+            self.elbow_yaw.publish(float(positions[3]))
+            self.elbow_pitch.publish(float(positions[4]))
+            self.wrist_pitch.publish(float(positions[5]))
+            self.wrist_roll.publish(float(positions[6]))
+
+            time.sleep(2)
 
 def main():
     app = QtGui.QApplication(sys.argv)
