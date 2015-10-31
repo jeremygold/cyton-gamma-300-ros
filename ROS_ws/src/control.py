@@ -69,7 +69,7 @@ class Example(QtGui.QWidget):
         shoulderRollSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         shoulderRollSlider.setFocusPolicy(QtCore.Qt.NoFocus)
         shoulderRollSlider.setGeometry(30, 40, 30, sliderHeight)
-        shoulderRollSlider.valueChanged[int].connect(self.changeShoulderRoll)
+        shoulderRollSlider.valueChanged[int].connect(self.shoulderRollMotor.setPercentPos)
 	shoulderRollSlider.setSliderPosition(50)
         self.shoulderRollMotor.setSlider(shoulderRollSlider)
         
@@ -168,9 +168,6 @@ class Example(QtGui.QWidget):
         self.setGeometry(300, 300, 740, 480)
         self.setWindowTitle('Cyton Gamma 300 Control')
         self.show()
-        
-    def changeShoulderRoll(self, percentPos):
-        self.shoulderRollMotor.setPercentPos(percentPos);
         
     def changeShoulderPitch(self, value):
 	shoulderPitchMin = -3.0
