@@ -175,8 +175,8 @@ class Example(QtGui.QWidget):
         self.show()
 
         
-    def changeShoulderRoll(self, value):
-        self.shoulderRollMotor.setPos(value);
+    def changeShoulderRoll(self, percentPos):
+        self.shoulderRollMotor.setPercentPos(percentPos);
         
     def changeShoulderPitch(self, value):
 	shoulderPitchMin = -3.0
@@ -255,7 +255,7 @@ class Example(QtGui.QWidget):
         for line in lines:
             print "Loading position: {0}".format(line)
             positions = line.split(',')
-            self.shoulder_roll.publish(float(positions[0]))
+            self.shoulderRollMotor.setRawPos(float(positions[0]))
             self.shoulder_yaw.publish(float(positions[1]))
             self.shoulder_pitch.publish(float(positions[2]))
             self.elbow_yaw.publish(float(positions[3]))
