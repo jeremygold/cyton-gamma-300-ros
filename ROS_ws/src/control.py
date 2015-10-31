@@ -3,9 +3,7 @@
 import sys
 from PyQt4 import QtGui, QtCore
 import rospy
-import std_msgs
 import time
-from dynamixel_msgs.msg import JointState
 from Motor import Motor
 
 sliderHeight = 300
