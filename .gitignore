@@ -1,4 +1,5 @@
 *.swp
 ROS_ws/build
 ROS_ws/devel
+*.pyc
 
