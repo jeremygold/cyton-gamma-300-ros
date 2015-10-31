@@ -68,7 +68,7 @@ class JointStatePublisher():
         [rospy.Subscriber(c + '/state', JointStateDynamixel, self.controller_state_handler) for c in self.controllers]
      
         # Start publisher
-        self.joint_states_pub = rospy.Publisher('/joint_states', JointStateMoveIt)
+        self.joint_states_pub = rospy.Publisher('/joint_states', JointStateMoveIt, queue_size=1)
        
         rospy.loginfo("Starting Dynamixel Joint State Publisher at " + str(rate) + "Hz")
        
