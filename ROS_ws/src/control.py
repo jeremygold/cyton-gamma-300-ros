@@ -58,21 +58,24 @@ class Example(QtGui.QWidget):
     def onWristRoll(self, data):
         self.wristRollPos = float(data.current_pos)
 
+    def makeControlSlider(self, x, name, motor):
+        newSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
+        newSlider.setFocusPolicy(QtCore.Qt.NoFocus)
+        newSlider.setGeometry(x, 40, 30, sliderHeight)
+        newSlider.valueChanged[int].connect(motor.setPercentPos)
+	newSlider.setSliderPosition(50)
+        motor.setSlider(newSlider)
+        
+        newLabel = QtGui.QLabel(self)
+        newLabel.setText(name)
+        newLabel.setGeometry(x, 20, 100, 30)
+
     def initUI(self):      
         shoulderLabel = QtGui.QLabel(self)
         shoulderLabel.setText("Shoulder")
         shoulderLabel.setGeometry(90, 5, 100, 30)
 
-        shoulderRollSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
-        shoulderRollSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        shoulderRollSlider.setGeometry(30, 40, 30, sliderHeight)
-        shoulderRollSlider.valueChanged[int].connect(self.shoulderRollMotor.setPercentPos)
-	shoulderRollSlider.setSliderPosition(50)
-        self.shoulderRollMotor.setSlider(shoulderRollSlider)
-        
-        shoulderRollLabel = QtGui.QLabel(self)
-        shoulderRollLabel.setText("Roll")
-        shoulderRollLabel.setGeometry(30, 20, 100, 30)
+        self.makeControlSlider(30, "Roll", self.shoulderRollMotor)
 
 	shoulderPitchSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         shoulderPitchSlider.setFocusPolicy(QtCore.Qt.NoFocus)
