@@ -6,6 +6,7 @@ import rospy
 import std_msgs
 import time
 from dynamixel_msgs.msg import JointState
+from Motor import Motor
 
 sliderHeight = 300
 
@@ -21,6 +22,9 @@ class Example(QtGui.QWidget):
         rospy.init_node('cyton_controller_manager', anonymous=True)
 
         self.shoulder_roll = rospy.Publisher('/shoulder_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+        rospy.Subscriber('/shoulder_roll_position_controller/state', JointState, self.onShoulderRoll)
+        self.shoulderRollMotor = Motor("Shoulder Roll", -3.8, 1.5, self.shoulder_roll)
+
         self.shoulder_yaw = rospy.Publisher('/shoulder_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
         self.shoulder_pitch = rospy.Publisher('/shoulder_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
 
@@ -32,7 +36,6 @@ class Example(QtGui.QWidget):
 
         self.gripper_position = rospy.Publisher('/gripper_position_controller/command', std_msgs.msg.Float64, queue_size=10)
 
-        rospy.Subscriber('/shoulder_roll_position_controller/state', JointState, self.onShoulderRoll)
         rospy.Subscriber('/shoulder_yaw_position_controller/state', JointState, self.onShoulderYaw)
         rospy.Subscriber('/shoulder_pitch_position_controller/state', JointState, self.onShoulderPitch)
 
@@ -170,14 +173,10 @@ class Example(QtGui.QWidget):
         self.setGeometry(300, 300, 740, 480)
         self.setWindowTitle('Cyton Gamma 300 Control')
         self.show()
+
         
     def changeShoulderRoll(self, value):
-	shoulderRollMin = -3.8
-	shoulderRollMax = 1.5
-	shoulderRollDelta = shoulderRollMax - shoulderRollMin
-	pos = (float(value) / 100.0) * shoulderRollDelta + shoulderRollMin
-	print 'Shoulder roll {0}'.format(pos)
-	self.shoulder_roll.publish(pos)
+        self.shoulderRollMotor.setPos(value);
         
     def changeShoulderPitch(self, value):
 	shoulderPitchMin = -3.0
