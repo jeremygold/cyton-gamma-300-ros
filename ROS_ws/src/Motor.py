@@ -24,5 +24,9 @@ class Motor:
         print '{}: {} ({}%)'.format(self.name, rawPos, percentPos)
         self.publisher.publish(rawPos)
 
+    def setMotorState(self, motorState):
+        self.motorState = motorState
 
+    def getMotorState(self):
+        return self.motorState
 
