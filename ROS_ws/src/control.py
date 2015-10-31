@@ -23,28 +23,22 @@ class Example(QtGui.QWidget):
 
         self.shoulderRollMotor = Motor("Shoulder Roll", "shoulder_roll_position_controller", -3.8, 1.5)
         self.shoulderPitchMotor = Motor("Shoulder Pitch", "shoulder_pitch_position_controller", -3.0, 0.6)
-
-        self.shoulder_yaw = rospy.Publisher('/shoulder_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-
+        self.shoulderYawMotor = Motor("Shoulder Yaw", "shoulder_yaw_position_controller", -3.0, 1.5)
 
         self.elbow_yaw = rospy.Publisher('/elbow_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-        self.elbow_pitch = rospy.Publisher('/elbow_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-
-        self.wrist_pitch = rospy.Publisher('/wrist_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-        self.wrist_roll = rospy.Publisher('/wrist_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-
-        self.gripper_position = rospy.Publisher('/gripper_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-
-        rospy.Subscriber('/shoulder_yaw_position_controller/state', JointState, self.onShoulderYaw)
-
         rospy.Subscriber('/elbow_yaw_position_controller/state', JointState, self.onElbowYaw)
+
+        self.elbow_pitch = rospy.Publisher('/elbow_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
         rospy.Subscriber('/elbow_pitch_position_controller/state', JointState, self.onElbowPitch)
 
+        self.wrist_pitch = rospy.Publisher('/wrist_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
         rospy.Subscriber('/wrist_pitch_position_controller/state', JointState, self.onWristPitch)
+
+        self.wrist_roll = rospy.Publisher('/wrist_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
         rospy.Subscriber('/wrist_roll_position_controller/state', JointState, self.onWristRoll)
 
-    def onShoulderYaw(self, data):
-        self.shoulderYawPos = float(data.current_pos)
+        self.gripper_position = rospy.Publisher('/gripper_position_controller/command', std_msgs.msg.Float64, queue_size=10)
+        # TODO: Where is gripper state?
 
     def onElbowYaw(self, data):
         self.elbowYawPos = float(data.current_pos)
@@ -76,28 +70,9 @@ class Example(QtGui.QWidget):
         shoulderLabel.setGeometry(90, 5, 100, 30)
 
         self.makeControlSlider(30, "Roll", self.shoulderRollMotor)
-
-	shoulderPitchSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
-        shoulderPitchSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        shoulderPitchSlider.setGeometry(100, 40, 30, sliderHeight)
-        shoulderPitchSlider.valueChanged[int].connect(self.shoulderPitchMotor.setPercentPos)
-	shoulderPitchSlider.setSliderPosition(50)
-        self.shoulderPitchMotor.setSlider(shoulderPitchSlider)
-
-	shoulderPitchLabel = QtGui.QLabel(self)
-	shoulderPitchLabel.setText("Pitch")
-        shoulderPitchLabel.setGeometry(100, 20, 100, 30)
+        self.makeControlSlider(100, "Pitch", self.shoulderPitchMotor)
+        self.makeControlSlider(170, "Yaw", self.shoulderYawMotor)
         
-        shoulderYawSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
-        shoulderYawSlider.setFocusPolicy(QtCore.Qt.NoFocus)
-        shoulderYawSlider.setGeometry(170, 40, 30, sliderHeight)
-        shoulderYawSlider.valueChanged[int].connect(self.changeShoulderYaw)
-	shoulderYawSlider.setSliderPosition(50)
-        
-        shoulderYawLabel = QtGui.QLabel(self)
-        shoulderYawLabel.setText("Yaw")
-        shoulderYawLabel.setGeometry(170, 20, 100, 30)
-
         elbowPitchSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         elbowPitchSlider.setFocusPolicy(QtCore.Qt.NoFocus)
         elbowPitchSlider.setGeometry(240, 40, 30, sliderHeight)
@@ -171,13 +146,6 @@ class Example(QtGui.QWidget):
         self.show()
         
 
-    def changeShoulderYaw(self, value):
-	shoulderYawMin = -3.0
-	shoulderYawMax = 1.5
-	shoulderYawDelta = shoulderYawMax - shoulderYawMin
-	pos = (float(value) / 100.0) * shoulderYawDelta + shoulderYawMin
-	print 'Shoulder yaw {0}'.format(pos)
-	self.shoulder_yaw.publish(pos)
 
     def changeElbowPitch(self, value):
 	elbowPitchMin = -3.0
@@ -223,7 +191,7 @@ class Example(QtGui.QWidget):
         text_file = open("SavePos.csv", "a")
         text_file.write("{0},{1},{2},{3},{4},{5},{6}\n".format(
             self.shoulderRollMotor.getMotorState(), \
-            self.shoulderYawPos, \
+            self.shoulderYawMotor.getMotorState(), \
             self.shoulderPitchMotor.getMotorState(), \
             self.elbowYawPos, \
             self.elbowPitchPos, \
@@ -241,7 +209,7 @@ class Example(QtGui.QWidget):
             print "Loading position: {0}".format(line)
             positions = line.split(',')
             self.shoulderRollMotor.setRawPos(float(positions[0]))
-            self.shoulder_yaw.publish(float(positions[1]))
+            self.shoulderYawMotor.setRawPos(float(positions[1]))
             self.shoulderPitchMotor.setRawPos(float(positions[2]))
             self.elbow_yaw.publish(float(positions[3]))
             self.elbow_pitch.publish(float(positions[4]))
