@@ -21,7 +21,7 @@ class Example(QtGui.QWidget):
     def initRospy(self):
         rospy.init_node('cyton_controller_manager', anonymous=True)
 
-        self.shoulderRollMotor = Motor("Shoulder Roll", -3.8, 1.5, "shoulder_roll_position_controller")
+        self.shoulderRollMotor = Motor("Shoulder Roll", "shoulder_roll_position_controller", -3.8, 1.5)
 
         self.shoulder_yaw = rospy.Publisher('/shoulder_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
         self.shoulder_pitch = rospy.Publisher('/shoulder_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
@@ -62,7 +62,6 @@ class Example(QtGui.QWidget):
         self.wristRollPos = float(data.current_pos)
 
     def initUI(self):      
-
         shoulderLabel = QtGui.QLabel(self)
         shoulderLabel.setText("Shoulder")
         shoulderLabel.setGeometry(90, 5, 100, 30)
@@ -72,6 +71,7 @@ class Example(QtGui.QWidget):
         shoulderRollSlider.setGeometry(30, 40, 30, sliderHeight)
         shoulderRollSlider.valueChanged[int].connect(self.changeShoulderRoll)
 	shoulderRollSlider.setSliderPosition(50)
+        self.shoulderRollMotor.setSlider(shoulderRollSlider)
         
         shoulderRollLabel = QtGui.QLabel(self)
         shoulderRollLabel.setText("Roll")
@@ -168,7 +168,6 @@ class Example(QtGui.QWidget):
         self.setGeometry(300, 300, 740, 480)
         self.setWindowTitle('Cyton Gamma 300 Control')
         self.show()
-
         
     def changeShoulderRoll(self, percentPos):
         self.shoulderRollMotor.setPercentPos(percentPos);
@@ -257,8 +256,9 @@ class Example(QtGui.QWidget):
             self.elbow_pitch.publish(float(positions[4]))
             self.wrist_pitch.publish(float(positions[5]))
             self.wrist_roll.publish(float(positions[6]))
-
-            time.sleep(2)
+            for i in range(1,20):
+                QtGui.QApplication.processEvents()
+                time.sleep(0.1)
 
 def main():
     app = QtGui.QApplication(sys.argv)

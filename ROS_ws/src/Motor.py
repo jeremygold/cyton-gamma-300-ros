@@ -3,7 +3,7 @@ import std_msgs
 from dynamixel_msgs.msg import JointState
 
 class Motor:
-    def __init__(self, name, min, max, nodeName):
+    def __init__(self, name, nodeName, min, max):
         self.name = name
         self.min = min
         self.max = max
@@ -27,6 +27,7 @@ class Motor:
     def setRawPos(self, rawPos):
         percentPos = self.rawToPercent(rawPos)
         print '{}: {} ({}%)'.format(self.name, rawPos, percentPos)
+        self.slider.setSliderPosition(percentPos)
         self.publisher.publish(rawPos)
 
     def onMotorState(self, data):
@@ -35,3 +36,5 @@ class Motor:
     def getMotorState(self):
         return self.motorState
 
+    def setSlider(self, slider):
+        self.slider = slider
