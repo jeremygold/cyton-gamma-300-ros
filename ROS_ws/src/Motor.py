@@ -22,6 +22,7 @@ class Motor:
     def setPercentPos(self, percentPos):
         rawPos = self.percentToRaw(percentPos)
         print '{}: {} ({}%)'.format(self.name, rawPos, percentPos)
+        self.slider.setSliderPosition(percentPos)
         self.publisher.publish(rawPos)
 
     def setRawPos(self, rawPos):
