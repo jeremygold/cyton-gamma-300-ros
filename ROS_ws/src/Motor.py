@@ -1,10 +1,15 @@
+import rospy
+import std_msgs
+from dynamixel_msgs.msg import JointState
+
 class Motor:
-    def __init__(self, name, min, max, publisher):
+    def __init__(self, name, min, max, nodeName):
         self.name = name
         self.min = min
         self.max = max
         self.posDelta = self.max - self.min
-        self.publisher = publisher
+        self.publisher = rospy.Publisher("/{}/command".format(nodeName), std_msgs.msg.Float64, queue_size=10)
+        rospy.Subscriber("/{}/state".format(nodeName), JointState, self.onMotorState)
 
     def percentToRaw(self, percentPos):
         rawPos = (float(percentPos) / 100.0) * self.posDelta + self.min
@@ -24,8 +29,8 @@ class Motor:
         print '{}: {} ({}%)'.format(self.name, rawPos, percentPos)
         self.publisher.publish(rawPos)
 
-    def setMotorState(self, motorState):
-        self.motorState = motorState
+    def onMotorState(self, data):
+        self.motorState = float(data.current_pos)
 
     def getMotorState(self):
         return self.motorState

@@ -21,9 +21,7 @@ class Example(QtGui.QWidget):
     def initRospy(self):
         rospy.init_node('cyton_controller_manager', anonymous=True)
 
-        self.shoulder_roll = rospy.Publisher('/shoulder_roll_position_controller/command', std_msgs.msg.Float64, queue_size=10)
-        rospy.Subscriber('/shoulder_roll_position_controller/state', JointState, self.onShoulderRoll)
-        self.shoulderRollMotor = Motor("Shoulder Roll", -3.8, 1.5, self.shoulder_roll)
+        self.shoulderRollMotor = Motor("Shoulder Roll", -3.8, 1.5, "shoulder_roll_position_controller")
 
         self.shoulder_yaw = rospy.Publisher('/shoulder_yaw_position_controller/command', std_msgs.msg.Float64, queue_size=10)
         self.shoulder_pitch = rospy.Publisher('/shoulder_pitch_position_controller/command', std_msgs.msg.Float64, queue_size=10)
@@ -45,9 +43,6 @@ class Example(QtGui.QWidget):
         rospy.Subscriber('/wrist_pitch_position_controller/state', JointState, self.onWristPitch)
         rospy.Subscriber('/wrist_roll_position_controller/state', JointState, self.onWristRoll)
 
-    def onShoulderRoll(self, data):
-        self.shoulderRollMotor.setMotorState(float(data.current_pos))
-        
     def onShoulderYaw(self, data):
         self.shoulderYawPos = float(data.current_pos)
 
