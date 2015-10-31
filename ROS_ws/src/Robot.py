@@ -50,3 +50,13 @@ class Robot:
             for i in range(1,5):
                 QtGui.QApplication.processEvents()
                 time.sleep(0.1)
+
+    def resetPos(self):
+        self.shoulderRollMotor.setPercentPos(50)
+        self.shoulderPitchMotor.setPercentPos(50)
+        self.shoulderYawMotor.setPercentPos(50)
+        self.elbowYawMotor.setPercentPos(50)
+        self.elbowPitchMotor.setPercentPos(50)
+        self.wristPitchMotor.setPercentPos(50)
+        self.wristRollMotor.setPercentPos(50)
+

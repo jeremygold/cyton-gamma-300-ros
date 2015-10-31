@@ -47,6 +47,11 @@ class Example(QtGui.QWidget):
 
         self.makeControlSlider(520, "Grip", self.robot.gripperMotor)
 
+        resetPosButton = QtGui.QPushButton(self)
+        resetPosButton.setText("Reset pos")
+        resetPosButton.setGeometry(260, sliderHeight + 40, 100, 30)
+        resetPosButton.clicked.connect(self.robot.resetPos)
+
         savePosButton = QtGui.QPushButton(self)
         savePosButton.setText("Save pos")
         savePosButton.setGeometry(380, sliderHeight + 40, 100, 30)
