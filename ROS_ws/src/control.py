@@ -79,8 +79,8 @@ class Example(QtGui.QWidget):
         text_file = open("SavePos.csv", "a")
         text_file.write("{0},{1},{2},{3},{4},{5},{6}\n".format(
             self.shoulderRollMotor.getMotorState(), \
-            self.shoulderYawMotor.getMotorState(), \
             self.shoulderPitchMotor.getMotorState(), \
+            self.shoulderYawMotor.getMotorState(), \
             self.elbowYawMotor.getMotorState(), \
             self.elbowPitchMotor.getMotorState(), \
             self.wristPitchMotor.getMotorState(), \
@@ -97,13 +97,13 @@ class Example(QtGui.QWidget):
             print "Loading position: {0}".format(line)
             positions = line.split(',')
             self.shoulderRollMotor.setRawPos(float(positions[0]))
-            self.shoulderYawMotor.setRawPos(float(positions[1]))
-            self.shoulderPitchMotor.setRawPos(float(positions[2]))
+            self.shoulderPitchMotor.setRawPos(float(positions[1]))
+            self.shoulderYawMotor.setRawPos(float(positions[2]))
             self.elbowYawMotor.setRawPos(float(positions[3]))
             self.elbowPitchMotor.setRawPos(float(positions[4]))
             self.wristPitchMotor.setRawPos(float(positions[5]))
             self.wristRollMotor.setRawPos(float(positions[6]))
-            for i in range(1,20):
+            for i in range(1,5):
                 QtGui.QApplication.processEvents()
                 time.sleep(0.1)
 
