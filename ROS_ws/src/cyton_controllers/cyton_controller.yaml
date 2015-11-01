@@ -1,4 +1,4 @@
-dynamixels: ['shoulder_roll_joint', 'shoulder_pitch_joint', 'shoulder_yaw_joint', 'elbow_pitch_joint', 'elbow_yaw_joint', 'wrist_pitch_joint', 'wrist_roll_joint']
+dynamixels: ['shoulder_roll_joint', 'shoulder_pitch_joint', 'shoulder_yaw_joint', 'elbow_pitch_joint', 'elbow_yaw_joint', 'wrist_pitch_joint', 'wrist_roll_joint', 'gripper_joint']
 
 shoulder_roll_position_controller:
   controller:
@@ -19,7 +19,7 @@ shoulder_pitch_position_controller:
     module: joint_position_controller
     type: JointPositionController
   joint_name: shoulder_pitch_joint
-  joint_speed: 5.0
+  joint_speed: 1.0
   motor:
     id: 1
     init: 2831
@@ -100,9 +100,9 @@ gripper_position_controller:
   joint_speed: 5.0
   motor:
     id: 7
-    init: 2831
-    min: 512
-    max: 3450
+    init: 512
+    min: 0
+    max: 1024
 
 cyton_joint_trajectory_action_controller:
   controller:

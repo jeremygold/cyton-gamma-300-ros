@@ -17,7 +17,7 @@ class Robot:
         self.elbowPitchMotor = Motor("Elbow Pitch", "elbow_pitch_position_controller", -3.0, 0.6)
         self.wristPitchMotor = Motor("Wrist Pitch", "wrist_pitch_position_controller", -3.0, 0.6)
         self.wristRollMotor = Motor("Wrist Roll", "wrist_roll_position_controller", -3.0, 1.5)
-        self.gripperMotor = Motor("Gripper", "gripper_position_controller", -20.0, 10.0)
+        self.gripperMotor = Motor("Gripper", "gripper_position_controller", -2.5, 0.0)
 
     def savePos(self):
         text_file = open("SavePos.csv", "a")
